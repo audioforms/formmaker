@@ -31,7 +31,7 @@ Form templates look like:
 ## Form Responses
 
 Filled out forms look like the below.
-All template information is preserved; this allows for users to use responses as templates ::
+All template information is preserved; this allows for users to use responses as templates.
 ``` yaml
     --- !example1out
     title    : Example Form Response
