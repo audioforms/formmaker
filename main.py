@@ -4,6 +4,7 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.button import Button
+from kivy.graphics import Color, Rectangle
 
 
 class InfoScreen(GridLayout):
@@ -35,6 +36,15 @@ class InfoScreen(GridLayout):
         self.button1 = Button(text='Add Questions')
         self.button1.bind(on_press=self.button1Press)
         self.add_widget(self.button1)
+        #change canvas options
+        with self.canvas.before:
+            Color(0.4, 0.4, 0.4, 1)
+            self.rect = Rectangle(size=self.size, pos=self.pos)
+        self.bind(size=self._update_rect, pos=self._update_rect)
+
+    def _update_rect(self, instance, value):
+        instance.rect.pos = instance.pos
+        instance.rect.size = instance.size
 
     def button1Press(self,btn):
         print ("title: " + self.title.text + "\n" + "and so on")
