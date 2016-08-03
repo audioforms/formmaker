@@ -10,13 +10,42 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 # question counters
 class QuestionTracker(object):
     def __init__(self):
-        self.number = 0
+        self.result=[]
         self.position = 0
 
+
     def newq(self):
-        self.number = self.number + 1
-        self.position = self.number
-        return self.number
+        """add a new question."""
+        self.position = self.position + 1
+        return self.position
+
+    def prev(self):
+        """detemrine logic to go back to previous screen."""
+        if (self.position <= 1):
+            self.position = self.position - 1
+            return 'Intro' # for back to main menu
+        else:
+            self.position = self.position - 1
+            return 'Add Question' + str(self.position) # go to prev question
+
+    def next(self):
+        """detemrine logic to go back to next screen."""
+        if (self.position==len(self.result)):
+            self.newq()
+        else:
+            self.position = self.position + 1
+        return 'Add Question' + str(self.position) # go to next question
+
+    def newest(self):
+        """quick check if newest for screen management."""
+        return (self.position==len(self.result))
+
+    def res_add(self, instr):
+        """ find place for and add result to total"""
+        if len(self.result) <= self.position:
+            self.result.append(instr)
+        else:
+            self.result[self.position] = instr
 
 qtrack = QuestionTracker()
 
@@ -46,7 +75,7 @@ class InfoLayout(GridLayout):
         self.repeat = CheckBox()
         self.add_widget(self.repeat)
         # submit button for the section (button 1)
-        self.button1 = Button(text='Add Questions')
+        self.button1 = Button(text='Next')
         self.button1.bind(on_press=self.button1Press)
         self.add_widget(self.button1)
         #change canvas options
@@ -60,15 +89,18 @@ class InfoLayout(GridLayout):
         instance.rect.size = instance.size
 
     def button1Press(self,btn):
-        print ("--- !" +  self.title.text)
-        print ("title: " + self.title.text)
-        print ("owner: " + self.owner.text)
-        print ("behavior: ")
-        print ("    intro-message: " + self.intro.text)
-        print ("    outro-message: " + self.outro.text)
-        print ("questions: ")
-        sm.switch_to(AddQuestionScreen(name='Add Question' +
-                                       str(qtrack.newq())))
+        introstr = "--- !" +  self.title.text
+        introstr = introstr + "title: " + self.title.text + "\n"
+        introstr = introstr + ("owner: " + self.owner.text) + "\n"
+        introstr = introstr + ("behavior: ") + "\n"
+        introstr = introstr + ("    intro-message: " + self.intro.text) + "\n"
+        introstr = introstr + ("    outro-message: " + self.outro.text) + "\n"
+        introstr = introstr + ("questions: ") + "\n"
+        qtrack.res_add(introstr)
+        destination = qtrack.next()
+        if qtrack.newest():
+            sm.add_widget(AddQuestionScreen(name=destination))
+        sm.current = destination
 
 
 class AddQuestionLayout(GridLayout):
@@ -89,9 +121,12 @@ class AddQuestionLayout(GridLayout):
         self.validation = TextInput(multiline=True)
         self.add_widget(self.validation)
         # add this question
-        self.button1 = Button(text='Save and add another')
+        self.button1 = Button(text='Next (add/edit next question)')
         self.button1.bind(on_press=self.button1Press)
         self.add_widget(self.button1)
+        self.button3 = Button(text='Back')
+        self.button3.bind(on_press=self.button3Press)
+        self.add_widget(self.button3)
         self.button2 = Button(text='Finish')
         self.button2.bind(on_press=self.button2Press)
         self.add_widget(self.button2)
@@ -106,15 +141,35 @@ class AddQuestionLayout(GridLayout):
         instance.rect.size = instance.size
 
     def button1Press(self,btn):
-        print ("  - title: " + self.title.text )
-        print ("    type: " + self.qtype.text )
+        qstr = ("  - title: " + self.title.text ) + "\n"
+        qstr = qstr + ("    type: " + self.qtype.text ) + "\n"
         if self.validation.text:
-            print ("    validation: " + self.validation.text )
-        sm.switch_to(AddQuestionScreen(name='Add Question' +
-                                       str(qtrack.newq())))
+            qstr = qstr + ("    validation: " + self.validation.text ) + "\n"
+        qtrack.res_add(qstr)
+        destination = qtrack.next()
+        if qtrack.newest():
+            sm.add_widget(AddQuestionScreen(name=destination))
+        sm.current = destination
 
     def button2Press(self,btn):
+        qstr = ("  - title: " + self.title.text ) + "\n"
+        qstr = qstr + ("    type: " + self.qtype.text ) + "\n"
+        if self.validation.text:
+            qstr = qstr + ("    validation: " + self.validation.text ) + "\n"
+        qtrack.res_add(qstr)
+
         print ("\nDONE")
+        print ("".join(qtrack.result))
+
+    def button3Press(self,btn):
+        qstr = ("  - title: " + self.title.text )
+        qstr = qstr + ("    type: " + self.qtype.text )
+        if self.validation.text:
+            qstr = qstr + ("    validation: " + self.validation.text )
+        qtrack.res_add(qstr)
+        sm.current = qtrack.prev()
+        pass
+
 
 class InfoScreen(Screen):
     def __init__(self, **kwargs):
