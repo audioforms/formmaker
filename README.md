@@ -3,7 +3,7 @@ Audioform formmaker and Internals
 # formmaker
 ![alt text][latestscreenshot]
 
-[latestscreenshot]: https://github.com/audioforms/formmaker/blob/master/screenshots/initial_31jul16.PNG?raw=true "31jul16"
+[latestscreenshot]: https://raw.githubusercontent.com/audioforms/formmaker/master/screenshots/alpha0.0.1_1aug16.PNG "01AUG16"
 # Audioform internals
 
 
