@@ -75,9 +75,9 @@ class InfoLayout(GridLayout):
         self.repeat = CheckBox()
         self.add_widget(self.repeat)
         # submit button for the section (button 1)
-        self.button1 = Button(text='Next')
-        self.button1.bind(on_press=self.button1Press)
-        self.add_widget(self.button1)
+        self.nextBtn = Button(text='Next')
+        self.nextBtn.bind(on_press=self.nextBtnPress)
+        self.add_widget(self.nextBtn)
         #change canvas options
         with self.canvas.before:
             Color(0.4, 0.4, 0.4, 1)
@@ -88,7 +88,7 @@ class InfoLayout(GridLayout):
         instance.rect.pos = instance.pos
         instance.rect.size = instance.size
 
-    def button1Press(self,btn):
+    def nextBtnPress(self,btn):
         introstr = "--- !" +  self.title.text
         introstr = introstr + "title: " + self.title.text + "\n"
         introstr = introstr + ("owner: " + self.owner.text) + "\n"
@@ -121,15 +121,15 @@ class AddQuestionLayout(GridLayout):
         self.validation = TextInput(multiline=True)
         self.add_widget(self.validation)
         # add this question
-        self.button1 = Button(text='Next (add/edit next question)')
-        self.button1.bind(on_press=self.button1Press)
-        self.add_widget(self.button1)
-        self.button3 = Button(text='Back')
-        self.button3.bind(on_press=self.button3Press)
-        self.add_widget(self.button3)
-        self.button2 = Button(text='Finish')
-        self.button2.bind(on_press=self.button2Press)
-        self.add_widget(self.button2)
+        self.nextBtn = Button(text='Next (add/edit next question)')
+        self.nextBtn.bind(on_press=self.nextBtnPress)
+        self.add_widget(self.nextBtn)
+        self.backBtn = Button(text='Back')
+        self.backBtn.bind(on_press=self.backBtnPress)
+        self.add_widget(self.backBtn)
+        self.finBtn = Button(text='Finish')
+        self.finBtn.bind(on_press=self.finBtnPress)
+        self.add_widget(self.finBtn)
         #change canvas options
         with self.canvas.before:
             Color(0.4, 0.4, 0.4, 1)
@@ -140,7 +140,7 @@ class AddQuestionLayout(GridLayout):
         instance.rect.pos = instance.pos
         instance.rect.size = instance.size
 
-    def button1Press(self,btn):
+    def nextBtnPress(self,btn):
         qstr = ("  - title: " + self.title.text ) + "\n"
         qstr = qstr + ("    type: " + self.qtype.text ) + "\n"
         if self.validation.text:
@@ -151,7 +151,7 @@ class AddQuestionLayout(GridLayout):
             sm.add_widget(AddQuestionScreen(name=destination))
         sm.current = destination
 
-    def button2Press(self,btn):
+    def finBtnPress(self,btn):
         qstr = ("  - title: " + self.title.text ) + "\n"
         qstr = qstr + ("    type: " + self.qtype.text ) + "\n"
         if self.validation.text:
@@ -161,7 +161,7 @@ class AddQuestionLayout(GridLayout):
         print ("\nDONE")
         print ("".join(qtrack.result))
 
-    def button3Press(self,btn):
+    def backBtnPress(self,btn):
         qstr = ("  - title: " + self.title.text )
         qstr = qstr + ("    type: " + self.qtype.text )
         if self.validation.text:
